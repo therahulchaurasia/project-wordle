@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
-import { WORDS } from '../../data'
-import { sample } from '../../utils'
-import GuessInput from '../GuessInput/index'
-import GuessResult from '../GuessResult/GuessResult'
-import Banner from '../Banner/Banner'
-import { checkGuess } from '../../game-helpers'
+import React, { useState } from "react"
+import { WORDS, INITIALKEYBOARDROWS } from "../../data"
+import { sample } from "../../utils"
+import GuessInput from "../GuessInput/index"
+import GuessResult from "../GuessResult/GuessResult"
+import Banner from "../Banner/Banner"
+import { checkGuess } from "../../game-helpers"
+import Keyboard from "../Keyboard/Keyboard"
 
 // Pick a random word on every pageload.
 const answer = sample(WORDS)
@@ -12,28 +13,42 @@ const answer = sample(WORDS)
 console.info({ answer })
 
 function Game() {
+  const [keyboardRows, setKeyboardRows] = useState(INITIALKEYBOARDROWS)
   const [guesses, setGuesses] = useState([])
-  const [gameStatus, setGameStatus] = useState('running')
+  const [gameStatus, setGameStatus] = useState("running")
+
+  const updateKeyStatuses = (statuses) => {
+    setKeyboardRows((prevRows) =>
+      prevRows.map((row) =>
+        row.map((key) => {
+          const match = statuses.find((s) => s.letter === key.alphabet)
+          if (!match) return key
+
+          if (key.style === "correct") return key // never override
+          if (key.style === "misplaced" && match.status === "incorrect")
+            return key
+
+          return { ...key, style: match.status }
+        })
+      )
+    )
+  }
   const handleGuesses = (guess) => {
     setGuesses((prevGuesses) => [...prevGuesses, guess])
-    let flag = 0
     const _guess = checkGuess(guess, answer)
-    _guess.forEach((item) => {
-      if (item.status === 'correct') {
-        flag = flag + 1
-      }
-    })
-    if (flag === 5) {
-      return setGameStatus('won')
+    updateKeyStatuses(_guess)
+    if (guess === answer) {
+      return setGameStatus("won")
     }
     if (guesses.length === 5) {
-      return setGameStatus('lost')
+      return setGameStatus("lost")
     }
   }
   return (
     <>
       <GuessResult guesses={guesses} answer={answer} />
       <GuessInput handleGuesses={handleGuesses} gameStatus={gameStatus} />
+      <Keyboard keyboardRows={keyboardRows} />
       <Banner gameStatus={gameStatus} guesses={guesses} answer={answer} />
     </>
   )
