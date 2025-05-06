@@ -51,7 +51,7 @@ export const WORDS = [
   "SOUND",
 ]
 
-export const INITIALKEYBOARDROWS = [
+export const INITIAL_KEYBOARD_ROWS = [
   [
     { alphabet: "Q", style: "" },
     { alphabet: "W", style: "" },

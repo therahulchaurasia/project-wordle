@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { WORDS, INITIALKEYBOARDROWS } from "../../data"
+import { WORDS, INITIAL_KEYBOARD_ROWS } from "../../data"
 import { sample } from "../../utils"
 import GuessInput from "../GuessInput/index"
 import GuessResult from "../GuessResult/GuessResult"
@@ -13,7 +13,7 @@ const answer = sample(WORDS)
 console.info({ answer })
 
 function Game() {
-  const [keyboardRows, setKeyboardRows] = useState(INITIALKEYBOARDROWS)
+  const [keyboardRows, setKeyboardRows] = useState(INITIAL_KEYBOARD_ROWS)
   const [guesses, setGuesses] = useState([])
   const [gameStatus, setGameStatus] = useState("running")
 
