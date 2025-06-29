@@ -5,7 +5,6 @@ function Banner({ gameStatus, guesses, answer }) {
     <>
       {gameStatus === 'won' && <VictoryBanner guesses={guesses} />}
       {gameStatus === 'lost' && <DefeatBanner answer={answer} />}
-      <DefeatBanner />
     </>
   )
 }
